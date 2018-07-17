@@ -24,7 +24,7 @@ const app = new Vue({
     },
     methods: {
         isExecutionPass: (testCaseExecution) => {
-            return testCaseExecution.Result === 'Passed' && moment(testCaseExecution.ExecutionTime) > app.successDate;
+            return testCaseExecution && testCaseExecution.Result === 'Passed' && moment(testCaseExecution.ExecutionTime) > app.successDate;
         },
         filterTestCases: (testCases) => {
             if (app.priority) {
@@ -43,7 +43,7 @@ const app = new Vue({
         },
 
         displayExecutionDate: (testCaseExecution) => {
-            return moment(testCaseExecution.ExecutionTime).format('YYYY-MM-DD');
+            return testCaseExecution && moment(testCaseExecution.ExecutionTime).format('YYYY-MM-DD');
         }
     }
 });

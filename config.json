@@ -1,16 +1,42 @@
 {
     "test_suites_by_owner": {
         "Brent Rager": [
-            1363,
-            1365,
-            1366,
-            1367,
-            1381,
-            1441,
-            1442,
-            1464,
-            2740,
-            1382
+            { "suite": 1363 },
+            { "suite": 1365 },
+            { "suite": 1366 },
+            { "suite": 1367 },
+            { "suite": 1381 },
+            { "suite": 1441 },
+            { "suite": 1442 },
+            { "suite": 1464 },
+            { "suite": 2740 },
+            { "suite": 1382 },
+            {
+                "suite": 4103,
+                "tcsIncluded": [
+                    57547
+                ]
+            },
+            {
+                "suite": 3977,
+                "tcsIncluded": [
+                    57548
+                ]
+            },
+            {
+                "suite": 3976,
+                "tcsIncluded": [
+                    57552
+                ]
+            },
+            {
+                "suite": 2051,
+                "tcsIncluded": [
+                    57554
+                ]
+            },
+            { "suite": 4213 },
+            { "suite": 4257 }
         ]
     }
 }

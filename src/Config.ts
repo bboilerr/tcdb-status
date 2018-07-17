@@ -1,7 +1,13 @@
 import * as fs from 'fs';
 
+export interface TestSuite {
+    suite: number;
+    tcsIncluded?: Array<number>;
+    tcsExcluded?: Array<number>;
+}
+
 export interface TestSuitesByOwner {
-    [key: string]: string;
+    [key: string]: Array<TestSuite>;
 }
 
 export interface Config {

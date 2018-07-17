@@ -1,4 +1,5 @@
 import * as request from 'request-promise-native';
+import * as Config from './Config';
 
 export interface TestPlan {
     Id: number;
@@ -40,11 +41,25 @@ export class TCDB {
         return `${this.baseUrl}/${endpoint}`;
     }
 
-    async getTestSuite(testSuite: string): Promise<TestSuite> {
-        return await request({
+    async getTestSuite(testSuite: Config.TestSuite): Promise<TestSuite> {
+        const testSuiteResult = await request({
             method: 'GET',
-            uri: this.buildUrl(`api/testsuites/${testSuite}`),
+            uri: this.buildUrl(`api/testsuites/${testSuite.suite}`),
             json: true
-        });
+        }) as TestSuite;
+
+        if (testSuite.tcsIncluded) {
+            testSuiteResult.TestCases = testSuiteResult.TestCases.filter(testCase => {
+                return (testSuite.tcsIncluded as Array<number>).includes(testCase.Id);
+            });
+        }
+
+        if (testSuite.tcsExcluded) {
+            testSuiteResult.TestCases = testSuiteResult.TestCases.filter(testCase => {
+                return !(testSuite.tcsIncluded as Array<number>).includes(testCase.Id);
+            });
+        }
+
+        return testSuiteResult;
     }
 }
