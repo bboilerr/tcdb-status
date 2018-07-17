@@ -32,56 +32,79 @@
     <main role="main" class="container">
 
         <div id="app">
-            <div v-if="testSuitesByOwners.length">
+            <form class="form-inline mb-5">
+                <h4 class="fas fa-filter mr-4 text-primary"></h4>
+                <div class="form-group mb-2">
+                    <label for="priority" class="sr-only">Minimum Priority</label>
+                    <select class="form-control" id="priority" v-model.number="priority">
+                        <option value="0">Any Priority</option>
+                        <option value="1">P1</option>
+                        <option value="2">P2+</option>
+                        <option value="3">P3+</option>
+                        <option value="4">P4+</option>
+                    </select>
+                </div>
+            </form>
+            <div v-if="testPlansByOwners.length">
                 <table class="table">
-                    <template v-for="testSuitesByOwner in testSuitesByOwners">
+                    <template v-for="testPlansByOwner in testPlansByOwners">
                         <thead>
                             <tr>
                                 <th scope="col" colspan="5">
-                                   <h1>{{testSuitesByOwner[0]}}</h1>
+                                   <h1>{{testPlansByOwner[0]}}</h1>
                                 </th>
                             </tr>
                         </thead>
-                        <template v-for="testSuite in testSuitesByOwner[1]" v-if="filterTestCasesByPriority(testSuite.TestCases).length">
-                            <thead>
-                                <tr>
-                                    <th scope="col" colspan="5">
-                                        <h2 v-for="(testPlan, index) in testSuite.TestPlans">
-                                            <span>TP
-                                                <a :href="`http://tcdb.genesys.com/phaster/#/testplans/${testPlan.Id}`">{{testPlan.Id}}</a> - {{testPlan.Name}}</span>
-                                            <span v-if="index+1 < testSuite.TestPlans.length">, </span>
-                                        </h2>
-                                    </th>
-                                </tr>
-                                <tr>
-                                    <th scope="col" colspan="5">
-                                        <h3>TS <a :href="`http://tcdb.genesys.com/phaster/#/testsuites/${testSuite.Id}`">{{testSuite.Id}}</a> - {{testSuite.Name}}</h3>
-                                    </th>
-                                </tr>
-                                <tr>
-                                    <th scope="col">Test Case</th>
-                                    <th scope="col">TC Name</th>
-                                    <th scope="col">TC Priority</th>
-                                    <th scope="col">Last Execution</th>
-                                    <th scope="col">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="testCase in filterTestCasesByPriority(testSuite.TestCases)">
-                                    <th scope="row"><a :href="`http://tcdb.genesys.com/phaster/#/testcases/${testCase.Id}`">{{testCase.Id}}</a></th>
-                                    <td>{{testCase.Name}}</td>
-                                    <td>{{testCase.Priority.Name}}</td>
-                                    <td>{{displayExecutionDate(testCase.LastExecutionResult)}}</td>
-                                    <td>
-                                        <i class="fas fa-check-circle text-success" v-if="isExecutionPass(testCase.LastExecutionResult)"></i>
-                                        <i class="fas fa-times-circle text-danger" v-else></i>
-                                    </td>
-                                </tr>
-                            </tbody>
+                        <template v-for="testPlans in testPlansByOwner[1]">
+                            <template v-if="testSuitesContainFilteredTestCases(testPlans[1])">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" colspan="5">
+                                            <h2 v-for="(testPlan, index) in testPlans[0].split(',').map(x => parseInt(x))">
+                                                <span>TP
+                                                    <a :href="`http://tcdb.genesys.com/phaster/#/testplans/${testPlan}`">{{testPlan}}</a> - {{testPlansMap.get(testPlan).Name}}
+                                                </span>
+                                                <span v-if="index+1 < testPlans[0].split(',').length">,</span>
+                                            </h2>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <template v-for="testSuite in testPlans[1]">
+                                    <template v-if="testSuiteContainsFilteredTestCases(testSuite)">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" colspan="5">
+                                                    <h3>TS <a :href="`http://tcdb.genesys.com/phaster/#/testsuites/${testSuite.Id}`">{{testSuite.Id}}</a> - {{testSuite.Name}}</h3>
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th scope="col">Test Case</th>
+                                                <th scope="col">TC Name</th>
+                                                <th scope="col">TC Priority</th>
+                                                <th scope="col">Last Execution</th>
+                                                <th scope="col">Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="testCase in filterTestCases(testSuite.TestCases)">
+                                                <th scope="row"><a :href="`http://tcdb.genesys.com/phaster/#/testcases/${testCase.Id}`">{{testCase.Id}}</a></th>
+                                                <td>{{testCase.Name}}</td>
+                                                <td>{{testCase.Priority.Name}}</td>
+                                                <td>{{displayExecutionDate(testCase.LastExecutionResult)}}</td>
+                                                <td>
+                                                    <i class="fas fa-check-circle text-success" v-if="isExecutionPass(testCase.LastExecutionResult)"></i>
+                                                    <i class="fas fa-times-circle text-danger" v-else></i>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </template>
+                                </template>
+                            </template>
                         </template>
                     </template>
                 </table>
             </div>
+            <img class="mx-auto d-block" src="images/loading.svg" v-else />
         </div>
 
     </main>
