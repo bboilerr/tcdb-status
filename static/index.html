@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>TCDB Status</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt"
+        crossorigin="anonymous">
+
+    <link href="css/main.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand" href="#">TCDB Status</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </nav>
+
+    <main role="main" class="container">
+
+        <div id="app">
+            <div v-if="testSuitesByOwners.length">
+                <table class="table">
+                    <template v-for="testSuitesByOwner in testSuitesByOwners">
+                        <thead>
+                            <tr>
+                                <th scope="col" colspan="5">
+                                   <h1>{{testSuitesByOwner[0]}}</h1>
+                                </th>
+                            </tr>
+                        </thead>
+                        <template v-for="testSuite in testSuitesByOwner[1]" v-if="filterTestCasesByPriority(testSuite.TestCases).length">
+                            <thead>
+                                <tr>
+                                    <th scope="col" colspan="5">
+                                        <h2 v-for="(testPlan, index) in testSuite.TestPlans">
+                                            <span>TP
+                                                <a :href="`http://tcdb.genesys.com/phaster/#/testplans/${testPlan.Id}`">{{testPlan.Id}}</a> - {{testPlan.Name}}</span>
+                                            <span v-if="index+1 < testSuite.TestPlans.length">, </span>
+                                        </h2>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th scope="col" colspan="5">
+                                        <h3>TS <a :href="`http://tcdb.genesys.com/phaster/#/testsuites/${testSuite.Id}`">{{testSuite.Id}}</a> - {{testSuite.Name}}</h3>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th scope="col">Test Case</th>
+                                    <th scope="col">TC Name</th>
+                                    <th scope="col">TC Priority</th>
+                                    <th scope="col">Last Execution</th>
+                                    <th scope="col">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="testCase in filterTestCasesByPriority(testSuite.TestCases)">
+                                    <th scope="row"><a :href="`http://tcdb.genesys.com/phaster/#/testcases/${testCase.Id}`">{{testCase.Id}}</a></th>
+                                    <td>{{testCase.Name}}</td>
+                                    <td>{{testCase.Priority.Name}}</td>
+                                    <td>{{displayExecutionDate(testCase.LastExecutionResult)}}</td>
+                                    <td>
+                                        <i class="fas fa-check-circle text-success" v-if="isExecutionPass(testCase.LastExecutionResult)"></i>
+                                        <i class="fas fa-times-circle text-danger" v-else></i>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </template>
+                    </template>
+                </table>
+            </div>
+        </div>
+
+    </main>
+    <!-- /.container -->
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js" integrity="sha256-CutOzxCRucUsn6C6TcEYsauvvYilEniTXldPa6/wu0k="
+        crossorigin="anonymous"></script>
+
+    <script src="https://unpkg.com/vue"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,36 @@
+{
+  "name": "tcdb-status",
+  "version": "1.0.0",
+  "description": "Web app for checking TCDB submission status.",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "ts-node src/index.ts",
+    "debug": "node --inspect -r ts-node/register src/index.ts",
+    "dev": "node ./node_modules/nodemon/bin/nodemon.js"
+  },
+  "author": "brent.rager@gmail.com",
+  "license": "MIT",
+  "dependencies": {
+    "@types/koa": "^2.0.46",
+    "@types/koa-bodyparser": "^5.0.1",
+    "@types/koa-router": "^7.0.30",
+    "@types/koa-static": "^4.0.0",
+    "@types/moment": "^2.13.0",
+    "@types/node": "^10.0.9",
+    "@types/request": "^2.47.1",
+    "@types/request-promise-native": "^1.0.15",
+    "koa": "^2.5.2",
+    "koa-bodyparser": "^4.2.1",
+    "koa-router": "^7.4.0",
+    "koa-static": "^5.0.0",
+    "moment": "^2.22.2",
+    "request": "^2.87.0",
+    "request-promise-native": "^1.0.5",
+    "ts-node": "^6.0.3",
+    "typescript": "^2.8.3"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.2"
+  }
+}
