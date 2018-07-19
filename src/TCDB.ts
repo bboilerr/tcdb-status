@@ -19,6 +19,11 @@ export interface TestCase {
         ExecutionTime: string;
         Result: string;
     };
+    State: {
+        Id: number;
+        Name: string;
+        Description: string;
+    };
 }
 
 export interface TestSuite {
@@ -56,9 +61,14 @@ export class TCDB {
 
         if (testSuite.tcsExcluded) {
             testSuiteResult.TestCases = testSuiteResult.TestCases.filter(testCase => {
-                return !(testSuite.tcsIncluded as Array<number>).includes(testCase.Id);
+                return !(testSuite.tcsExcluded as Array<number>).includes(testCase.Id);
             });
         }
+
+        // Remove non-Active tests
+        testSuiteResult.TestCases = testSuiteResult.TestCases.filter(testCase => {
+            return testCase.State.Name === 'Active';
+        });
 
         return testSuiteResult;
     }
